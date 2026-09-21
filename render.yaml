@@ -25,8 +25,9 @@ services:
         value: /app/exports
 
   # ── ResearchGPT Frontend (React + Vite Static Site) ─────────────────────────
-  - type: static
+  - type: web
     name: researchgpt-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
