@@ -1,0 +1,48 @@
+# ==============================================================================
+# ResearchGPT Backend Dockerfile (FastAPI + LangGraph + ChromaDB + WeasyPrint)
+# ==============================================================================
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    CHROMA_PATH=/app/chroma_data \
+    EXPORT_DIR=/app/exports
+
+WORKDIR /app
+
+# Install system dependencies for WeasyPrint, PyMuPDF, Matplotlib & healthchecks
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    libffi-dev \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libpangoft2-1.0-0 \
+    libcairo2 \
+    libgdk-pixbuf-2.0-0 \
+    shared-mime-info \
+    fonts-liberation \
+    fonts-dejavu-core \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend application code
+COPY app/ ./app/
+COPY conftest.py .
+COPY demo_materials/ ./demo_materials/
+
+# Create directories for persistent ChromaDB store and exports
+RUN mkdir -p /app/chroma_data /app/exports
+
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 --start-period=10s \
+    CMD curl -f http://localhost:${PORT:-8000}/api/health || exit 1
+
+# Start FastAPI application via Uvicorn (binds to dynamic $PORT provided by Render/Railway, defaulting to 8000)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResearchGPT — Word & PDF Thesis Assembly Platform</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              950: '#030712',
+              900: '#090d16',
+              850: '#0d1322',
+              800: '#131b2e',
+              700: '#1e293b',
+              600: '#334155'
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            'glow-blue': '0 0 20px -3px rgba(59, 130, 246, 0.35)',
+            'glow-blue-lg': '0 0 35px -5px rgba(59, 130, 246, 0.45)'
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- React 18 CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+    .glass-card {
+      background: rgba(19, 27, 46, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .glass-panel {
+      background: rgba(13, 19, 34, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-100 min-h-screen">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const triggerBlobDownload = (filename, blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 100);
+    };
+
+    const MOCK_DOCS = [
+      { id: "doc-1", filename: "Quantum_Computing_Optimization_2026.txt", size: "1.8 MB", uploadedAt: "2026-08-11 04:05", sectionsFound: ["Introduction", "Methods", "Discussion"], chunkCount: 6, status: "indexed", vectors: 6 }
+    ];
+
+    function App() {
+      const [tab, setTab] = useState('export');
+      const [docs, setDocs] = useState(MOCK_DOCS);
+      const [isAssembling, setIsAssembling] = useState(false);
+      const [progress, setProgress] = useState(0);
+      const [assemblyDone, setAssemblyDone] = useState(false);
+
+      const activeDocName = docs[0] ? docs[0].filename : "Quantum_Computing_Optimization_2026.txt";
+      const cleanTitle = activeDocName.replace(/\.[^/.]+$/, '');
+      const humanTitle = cleanTitle.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      const fileSlug = cleanTitle.replace(/[^a-zA-Z0-9_\-\(\)]/g, '_');
+
+      const runExport = () => {
+        setIsAssembling(true);
+        setAssemblyDone(false);
+        setProgress(10);
+        const timer = setInterval(() => {
+          setProgress(p => {
+            if (p >= 100) {
+              clearInterval(timer);
+              setIsAssembling(false);
+              setAssemblyDone(true);
+              return 100;
+            }
+            return p + 25;
+          });
+        }, 500);
+      };
+
+      const downloadWordDoc = () => {
+        const docContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>${humanTitle}</title><style>body{font-family:'Times New Roman',serif;margin:1.5in;line-height:2.0;}h1{text-align:center;}h2{border-bottom:1px solid #000;}</style></head><body><h1>${humanTitle}</h1><p><strong>Jane Smith, M.Sc.</strong> &bull; Department of Computer Science</p><h2>1. Abstract</h2><p>Synthesized dissertation for ${humanTitle}.</p><h2>2. Introduction</h2><p>Combinatorial optimization research pipeline.</p><h2>3. References</h2><p>[1] Thorne, A., & Rostova, E. (2026). IEEE TQE, 14(3), 45-62.</p></body></html>`;
+        const blob = new Blob(['\ufeff', docContent], { type: 'application/msword' });
+        triggerBlobDownload(`${fileSlug}_Thesis.doc`, blob);
+      };
+
+      const downloadPdf = () => {
+        const pdfLines = [
+          `Title: ${humanTitle}`,
+          `Author: Jane Smith, M.Sc.`,
+          `Source: ${activeDocName}`,
+          `--------------------------------------------------`,
+          `1. ABSTRACT`,
+          `Synthesized dissertation from ${activeDocName}.`,
+          `--------------------------------------------------`,
+          `2. INTRODUCTION`,
+          `Variational quantum framework grounded in uploaded material.`,
+          `--------------------------------------------------`,
+          `3. CONCLUSION`,
+          `Full publication-ready document assembled successfully.`
+        ];
+
+        const textStream = pdfLines.map((line, i) => 
+          `BT /F1 11 Tf 40 ${730 - (i * 24)} Td (${line.replace(/[()\\]/g, '')}) Tj ET`
+        ).join('\n');
+
+        const pdfContent = `%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length ${textStream.length} >>
+stream
+${textStream}
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000244 00000 n 
+0000000323 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+${400 + textStream.length}
+%%EOF`;
+
+        const blob = new Blob([pdfContent], { type: 'application/pdf' });
+        triggerBlobDownload(`${fileSlug}_Thesis.pdf`, blob);
+      };
+
+      const downloadPlagiarismTxt = () => {
+        const report = `# Plagiarism Similarity Report\nDocument: ${humanTitle}\nSource File: ${activeDocName}\nSimilarity Score: 4.2%\nStatus: LOW RISK (<15%)`;
+        const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+        triggerBlobDownload(`${fileSlug}_Plagiarism.txt`, blob);
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          <header className="h-16 border-b border-slate-800 bg-dark-950 px-6 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="h-9 w-9 rounded-xl bg-brand-600 flex items-center justify-center font-bold text-white shadow-glow-blue">R</div>
+              <span className="font-bold text-lg text-white">Research<span className="text-brand-400">GPT</span></span>
+            </div>
+          </header>
+
+          <div className="flex-1 flex">
+            <main className="flex-1 p-8 max-w-5xl mx-auto space-y-6">
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold text-white">Export Word (.doc) & PDF (.pdf) Documents</h2>
+                <p className="text-xs text-slate-400">Active Material: <strong className="text-white">{humanTitle}</strong></p>
+
+                <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                  {!isAssembling && !assemblyDone && (
+                    <button onClick={runExport} className="w-full py-3 rounded-xl bg-brand-600 text-white font-bold text-sm shadow-glow-blue">
+                      Assemble Word & PDF Files
+                    </button>
+                  )}
+
+                  {isAssembling && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-mono text-brand-400">
+                        <span>Generating .doc and .pdf files...</span>
+                        <span>{progress}%</span>
+                      </div>
+                      <div className="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div className="bg-brand-500 h-full transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                      </div>
+                    </div>
+                  )}
+
+                  {assemblyDone && (
+                    <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-3">
+                      <span className="text-xs text-emerald-400 font-bold block">✓ Word & PDF Ready for Download!</span>
+                      <div className="space-y-2 text-xs">
+                        <button onClick={downloadWordDoc} className="w-full text-left p-3 bg-slate-900 border border-slate-800 hover:border-brand-500/40 rounded font-mono text-slate-200 flex justify-between items-center">
+                          <span>📘 {fileSlug}_Thesis.doc</span>
+                          <span className="text-brand-400 font-bold px-2 py-1 bg-brand-500/10 rounded">Download WORD</span>
+                        </button>
+                        <button onClick={downloadPdf} className="w-full text-left p-3 bg-slate-900 border border-slate-800 hover:border-brand-500/40 rounded font-mono text-slate-200 flex justify-between items-center">
+                          <span>📕 {fileSlug}_Thesis.pdf</span>
+                          <span className="text-brand-400 font-bold px-2 py-1 bg-brand-500/10 rounded">Download PDF</span>
+                        </button>
+                        <button onClick={downloadPlagiarismTxt} className="w-full text-left p-3 bg-slate-900 border border-slate-800 hover:border-brand-500/40 rounded font-mono text-slate-200 flex justify-between items-center">
+                          <span>🛡️ {fileSlug}_Plagiarism.txt</span>
+                          <span className="text-brand-400 font-bold px-2 py-1 bg-brand-500/10 rounded">Download TXT</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

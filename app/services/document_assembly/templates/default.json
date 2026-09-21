@@ -1,0 +1,66 @@
+{
+  "name": "default",
+  "display_name": "Standard University Thesis",
+  "version": "2.0",
+
+  "page": {
+    "size": "A4",
+    "margin_top_inches":    1.0,
+    "margin_bottom_inches": 1.0,
+    "margin_left_inches":   1.5,
+    "margin_right_inches":  1.0
+  },
+
+  "fonts": {
+    "body_family":    "Times New Roman",
+    "body_size_pt":   12,
+    "heading1_family":"Times New Roman",
+    "heading1_size_pt": 16,
+    "heading1_bold":  true,
+    "heading2_family":"Times New Roman",
+    "heading2_size_pt": 14,
+    "heading2_bold":  true,
+    "heading3_family":"Times New Roman",
+    "heading3_size_pt": 12,
+    "heading3_bold":  true,
+    "caption_size_pt": 10,
+    "caption_italic": true
+  },
+
+  "spacing": {
+    "line_spacing":               2.0,
+    "paragraph_space_before_pt":  0,
+    "paragraph_space_after_pt":   12,
+    "heading1_space_before_pt":   24,
+    "heading1_space_after_pt":    12,
+    "heading2_space_before_pt":   18,
+    "heading2_space_after_pt":    6,
+    "heading3_space_before_pt":   12,
+    "heading3_space_after_pt":    6
+  },
+
+  "document": {
+    "title_page":           true,
+    "table_of_contents":    true,
+    "page_numbers":         true,
+    "page_number_position": "bottom-center",
+    "header_text":          "",
+    "footer_text":          "",
+    "chapter_break":        true
+  },
+
+  "charts": {
+    "default_width_inches": 5.5,
+    "caption_position":     "below",
+    "border":               false
+  },
+
+  "tables": {
+    "style":        "Table Grid",
+    "header_bold":  true,
+    "header_shading": "#D9E1F2",
+    "caption_position": "above"
+  },
+
+  "pdf_css_extra": ""
+}

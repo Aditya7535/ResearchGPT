@@ -1,0 +1,32 @@
+================================================================================
+TITLE: Neural Transformer Architectures for Automated Clinical Radiology Diagnostics
+AUTHORS: Marcus Vance, Sarah Jenkins, David Chen
+JOURNAL: Lancet Digital Health, Vol. 8, pp. 204-219, 2025
+DOI: 10.1016/S2589-7500(25)00112-4
+================================================================================
+
+1. INTRODUCTION
+Radiological diagnostic interpretation requires meticulous review of volumetric medical imaging. Deep vision-language transformers have emerged as a scalable method for preliminary automated screening. This paper evaluates multi-modal transformer performance on 12,000 chest CT scans annotated by board-certified radiologists.
+
+2. METHODS
+We collected 12,000 anonymized DICOM scans across three hospital networks. Scans were chunked by diagnostic region (Lung Parenchyma, Mediastinum, Bone Structure). Dense feature extraction utilized a 3D ResNet-Transformer backbone connected to a PubMed fine-tuned LLM.
+
+TABLE 1: Diagnostic Sensitivity & Specificity Metrics
+------------------------------------------------------------------
+Pathology Class      | Sample Count | Sensitivity % | Specificity %
+------------------------------------------------------------------
+Pneumothorax         | 2,400        | 96.8%         | 98.2%
+Pulmonary Nodule     | 4,100        | 94.1%         | 96.5%
+Consolidation        | 3,200        | 95.4%         | 97.1%
+Normal Controls      | 2,300        | 99.1%         | 99.4%
+------------------------------------------------------------------
+
+3. RESULTS
+The vision-language diagnostics engine achieved an overall AUC-ROC of 0.978 across all pathology classes. False positive rates were reduced by 34.2% compared to standalone convolutional baselines.
+
+4. DISCUSSION
+Automated transformer screening accelerates radiologist workflow triage significantly. Multi-site clinical trials are underway to validate real-time emergency department integration.
+
+5. REFERENCES
+1. Vance M, Jenkins S, Chen D. Neural Transformer Architectures for Automated Clinical Radiology Diagnostics. Lancet Digit Health. 2025;8:204-219. doi:10.1016/S2589-7500(25)00112-4
+2. Smith J, Wang L. Deep Learning in Radiology. J Med Imaging. 2024;41:88-102.

@@ -1,0 +1,60 @@
+{
+  "name": "default",
+  "display_name": "Standard University Thesis Template",
+  "version": "1.0",
+  "required_sections": [
+    "Abstract",
+    "Introduction",
+    "Literature Review",
+    "Methods",
+    "Results",
+    "Discussion",
+    "Conclusion",
+    "References"
+  ],
+  "optional_sections": ["Appendix", "Acknowledgements"],
+  "section_rules": {
+    "Abstract": {
+      "min_words": 150,
+      "max_words": 300,
+      "required_elements": ["objective", "methods", "results", "conclusion"]
+    },
+    "Introduction": {
+      "min_words": 300,
+      "max_words": 1000,
+      "required_elements": ["research_question", "significance", "structure_overview"]
+    },
+    "Literature Review": {
+      "min_words": 500,
+      "required_elements": ["prior_work", "gap_identification"]
+    },
+    "Methods": {
+      "min_words": 300,
+      "required_elements": ["data_source", "procedure"]
+    },
+    "Results": {
+      "min_words": 200,
+      "required_elements": ["findings"]
+    },
+    "Discussion": {
+      "min_words": 300,
+      "required_elements": ["interpretation", "limitations"]
+    },
+    "Conclusion": {
+      "min_words": 150,
+      "required_elements": ["summary", "future_work"]
+    },
+    "References": {
+      "min_entries": 5
+    }
+  },
+  "formatting_rules": {
+    "citation_style":     "apa",
+    "line_spacing":       "double",
+    "font":               "Times New Roman 12pt",
+    "margins":            "1 inch all sides",
+    "heading_case":       "title",
+    "no_content_allowed": false,
+    "flagged_claims_allowed": false
+  }
+}
