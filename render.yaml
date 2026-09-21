@@ -28,7 +28,6 @@ services:
   - type: web
     name: researchgpt-frontend
     runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
