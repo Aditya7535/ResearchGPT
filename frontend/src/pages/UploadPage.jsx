@@ -152,12 +152,12 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
   return (
     <div className="space-y-8 animate-fade-in max-w-6xl mx-auto pb-12">
       {/* Page Title */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center space-x-3">
+          <h1 className="text-2xl font-bold text-white flex flex-wrap items-center gap-3">
             <span>Research Document Ingestion</span>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 font-mono">
-              PyMuPDF + python-docx + ChromaDB
+            <span className="text-xs px-2.5 py-1 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-400 font-mono font-medium">
+              PyMuPDF • python-docx • ChromaDB
             </span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
@@ -167,7 +167,7 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
 
         <button
           onClick={onContinue}
-          className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm shadow-glow-blue transition-all"
+          className="shrink-0 self-start sm:self-center flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm shadow-glow-blue transition-all"
         >
           <span>View Section Dashboard</span>
           <ArrowRight className="h-4 w-4" />
@@ -218,24 +218,19 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
         {/* Uploading progress bar overlay */}
         {isUploading && (
           <div className="mt-6 max-w-lg mx-auto bg-dark-950 p-4 rounded-xl border border-slate-800 shadow-2xl">
-            <div className="flex items-center justify-between text-xs text-slate-300 mb-2">
-              <span className="flex items-center space-x-2 font-mono">
-                <Cpu className="h-4 w-4 text-brand-400 animate-spin" />
-                <span>Processing & Indexing {selectedFile?.name}...</span>
-              </span>
-              <span className="font-mono text-brand-400 font-bold">{uploadProgress}%</span>
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="text-slate-300 font-medium truncate max-w-xs">{selectedFile?.name}</span>
+              <span className="text-brand-400 font-mono font-semibold">{uploadProgress}%</span>
             </div>
-            
-            <div className="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden border border-slate-800">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
               <div
-                className="bg-brand-500 h-full transition-all duration-300 rounded-full animate-shimmer"
+                className="bg-brand-500 h-full rounded-full transition-all duration-300 animate-shimmer"
                 style={{ width: `${uploadProgress}%` }}
               />
             </div>
-
-            <div className="grid grid-cols-3 gap-2 mt-3 text-[11px] font-mono text-slate-400">
+            <div className="grid grid-cols-3 gap-2 mt-3 text-[11px] text-slate-400 font-mono text-center">
               <div className="bg-slate-900/60 p-2 rounded border border-slate-800/80">
-                1. Text Extract
+                1. Text Parsing
               </div>
               <div className="bg-slate-900/60 p-2 rounded border border-slate-800/80">
                 2. Header Chunking
@@ -250,15 +245,15 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
 
       {/* Uploaded Documents List */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h2 className="text-lg font-semibold text-white flex items-center space-x-2">
             <Database className="h-5 w-5 text-brand-400" />
             <span>Ingested Knowledge Corpus</span>
-            <span className="text-xs text-slate-400 font-mono">({documents.length} files)</span>
+            <span className="text-xs text-slate-400 font-mono font-normal">({documents.length} files)</span>
           </h2>
 
           <div className="text-xs text-slate-400 flex items-center space-x-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
             <span>Local SQLCipher & ChromaDB storage</span>
           </div>
         </div>
@@ -267,15 +262,15 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
           {documents.map((doc) => (
             <div
               key={doc.id}
-              className="glass-card rounded-xl p-5 space-y-3 transition-all hover:border-brand-500/40 relative group"
+              className="glass-card rounded-xl p-5 space-y-3.5 transition-all hover:border-brand-500/40 relative group"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-brand-400">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="h-10 w-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-brand-400 shrink-0">
                     <FileText className="h-5 w-5" />
                   </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-white truncate max-w-[220px]">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-sm font-semibold text-white truncate" title={doc.filename}>
                       {doc.filename}
                     </h4>
                     <p className="text-xs text-slate-400 font-mono mt-0.5">
@@ -286,7 +281,7 @@ export default function UploadPage({ documents, setDocuments, chunks, setChunks,
 
                 <button
                   onClick={() => handleDelete(doc.id)}
-                  className="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
+                  className="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100 shrink-0"
                   title="Remove document"
                 >
                   <Trash2 className="h-4 w-4" />

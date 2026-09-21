@@ -59,8 +59,8 @@ export default function Sidebar({ activeTab, setActiveTab, counts }) {
   ];
 
   return (
-    <aside className="w-64 bg-dark-900 border-r border-slate-800 flex flex-col justify-between h-[calc(100vh-61px)] sticky top-[61px]">
-      <div className="p-4 space-y-1 overflow-y-auto">
+    <aside className="w-72 bg-dark-900 border-r border-slate-800 flex flex-col justify-between h-[calc(100vh-65px)] sticky top-[65px] shrink-0">
+      <div className="p-4 space-y-1.5 overflow-y-auto">
         <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
           Navigation
         </div>
@@ -80,23 +80,23 @@ export default function Sidebar({ activeTab, setActiveTab, counts }) {
               }`}
             >
               {isActive && (
-                <div className="absolute left-0 top-2 bottom-2 w-1 bg-brand-500 rounded-r-full" />
+                <div className="absolute left-0 top-2 bottom-2 w-1 bg-brand-500 rounded-r-full shadow-glow-blue" />
               )}
               
-              <Icon className={`h-5 w-5 mt-0.5 transition-colors ${
+              <Icon className={`h-5 w-5 mt-0.5 shrink-0 transition-colors ${
                 isActive ? 'text-brand-400' : 'text-slate-400 group-hover:text-slate-300'
               }`} />
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <span className={`text-sm font-medium truncate ${
+                <div className="flex items-center justify-between gap-2">
+                  <span className={`text-sm font-medium whitespace-nowrap ${
                     isActive ? 'text-white font-semibold' : ''
                   }`}>
                     {item.label}
                   </span>
 
                   {item.badge && (
-                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded border whitespace-nowrap shrink-0 ${
                       item.badgeColor || (isActive 
                         ? 'bg-brand-500/20 text-brand-300 border-brand-400/30' 
                         : 'bg-slate-800 text-slate-400 border-slate-700')
